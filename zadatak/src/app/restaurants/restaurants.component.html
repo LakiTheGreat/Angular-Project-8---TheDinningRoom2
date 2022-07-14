@@ -1,0 +1,228 @@
+<!-- {{ locations[1]["country"] | json }} -->
+<!-- {{ selectedLocation }}
+{{ selectedCities }} -->
+
+<!-- {{ restaurantList.count }}
+{{ params.pageSize }} -->
+
+<form>
+  <!-- country -->
+  <div class="row my-3">
+    <div class="col-3">
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">Country</label>
+        <select
+          class="form-select"
+          id="inputGroupSelect01"
+          name="selectInput"
+          [(ngModel)]="selectedLocation"
+          (change)="findCities()"
+        >
+          <option selected>Choose...</option>
+          <option *ngFor="let x of locations" value="{{ x.country }}">
+            {{ x.country }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- cities -->
+    <div class="col-3">
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">City</label>
+        <select
+          class="form-select"
+          id="inputGroupSelect01"
+          name="inputSelect2"
+          [(ngModel)]="this.params.filter.city"
+          (change)="getRestaurants()"
+        >
+          <option value="" selected>All</option>
+          <option *ngFor="let x of selectedCities" value="{{ x }}">
+            {{ x }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <!-- rating -->
+    <div class="col-3">
+      <div class="input-group">
+        <span class="input-group-text text-dark">Rating</span>
+        <input
+          type="number"
+          class="form-control"
+          name="fromInput"
+          [(ngModel)]="this.params.filter.ratingFrom"
+          (change)="getRestaurants()"
+        />
+        <input
+          type="number"
+          class="form-control"
+          name="toInput"
+          [(ngModel)]="this.params.filter.ratingTo"
+          (change)="getRestaurants()"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+<ngb-accordion #acc="ngbAccordion" [closeOthers]="true" activeIds="ngb-panel-0">
+  <ngb-panel *ngFor="let rest of restaurantList.results">
+    <ng-template ngbPanelTitle>
+      <div class="row" style="width: 100%">
+        <div class="col-10">
+          <span>{{ rest.name }}</span>
+        </div>
+        <div class="col-2">
+          <span
+            >{{ rest.price }}
+            <img src="assets/images/coin-full.png" alt="slika" />
+          </span>
+          <span class="mx-3"
+            >{{ rest.rating }}
+            <img src="assets/images/star-full.png" alt="slika"
+          /></span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <div class="row">
+        <div class="col-4">
+          <p>{{ rest.description }}</p>
+          <p>City: {{ rest.city }}</p>
+          <p>Primary cuisine: {{ rest.cuisine | titlecase }}</p>
+        </div>
+        <div class="col-8">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Menu</a>
+              <ng-template ngbNavContent>
+                <app-menu [restaurantId]="rest._id"></app-menu>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Working Hours</a>
+              <ng-template ngbNavContent>
+                <ul>
+                  <li>
+                    Monday:
+                    {{
+                      rest.days["1"].opens == ""
+                        ? "Closed."
+                        : rest.days["1"].opens
+                    }}
+
+                    {{
+                      rest.days["1"].closes == ""
+                        ? ""
+                        : "- " + rest.days["1"].closes
+                    }}
+                  </li>
+                  <li>
+                    Tuesday:
+                    {{
+                      rest.days["2"].opens == ""
+                        ? "Closed."
+                        : rest.days["2"].opens
+                    }}
+
+                    {{
+                      rest.days["2"].closes == ""
+                        ? ""
+                        : "- " + rest.days["2"].closes
+                    }}
+                  </li>
+                  <li>
+                    Wednesday:
+                    {{
+                      rest.days["3"].opens == ""
+                        ? "Closed."
+                        : rest.days["3"].opens
+                    }}
+
+                    {{
+                      rest.days["3"].closes == ""
+                        ? ""
+                        : "- " + rest.days["3"].closes
+                    }}
+                  </li>
+                  <li>
+                    Thursday:
+                    {{
+                      rest.days["4"].opens == ""
+                        ? "Closed."
+                        : rest.days["4"].opens
+                    }}
+
+                    {{
+                      rest.days["4"].closes == ""
+                        ? ""
+                        : "- " + rest.days["4"].closes
+                    }}
+                  </li>
+                  <li>
+                    Friday:
+                    {{
+                      rest.days["5"].opens == ""
+                        ? "Closed."
+                        : rest.days["5"].opens
+                    }}
+
+                    {{
+                      rest.days["5"].closes == ""
+                        ? ""
+                        : "- " + rest.days["5"].closes
+                    }}
+                  </li>
+                  <li>
+                    Saturday:
+                    {{
+                      rest.days["6"].opens == ""
+                        ? "Closed."
+                        : rest.days["6"].opens
+                    }}
+
+                    {{
+                      rest.days["6"].closes == ""
+                        ? ""
+                        : "- " + rest.days["6"].closes
+                    }}
+                  </li>
+                  <li>
+                    Sunday:
+                    {{
+                      rest.days["7"].opens == ""
+                        ? "Closed."
+                        : rest.days["7"].opens
+                    }}
+
+                    {{
+                      rest.days["7"].closes == ""
+                        ? ""
+                        : "- " + rest.days["7"].closes
+                    }}
+                  </li>
+                </ul>
+              </ng-template>
+            </li>
+          </ul>
+
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+          <!-- <pre>Active: {{ active }}</pre> -->
+        </div>
+      </div>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+
+<button
+  *ngIf="params.pageSize <= restaurantList.count"
+  class="btn btn-primary my-3"
+  (click)="onLoadMore()"
+>
+  Load More
+</button>
+
+<!-- <p *ngFor="let rest of restaurantList.results">{{ rest.days["1"] | json }}</p> -->

@@ -1,0 +1,22 @@
+<div class="row">
+  <h2>Appetizers</h2>
+  <div class="col-4" *ngFor="let item of appetizers">
+    <p class="p-0 m-0">
+      {{ item.name | titlecase }} {{ ": " + item.price + "$" }}
+    </p>
+  </div>
+  <h2 class="mt-2">Main dishes</h2>
+  <div class="col-4" *ngFor="let item of main">
+    <p class="p-0 m-0">
+      {{ item.name | titlecase }} {{ ": " + item.price + "$" }}
+    </p>
+  </div>
+  <h2 class="mt-2">Desserts</h2>
+  <div class="col-4" *ngFor="let item of dessert">
+    <p class="p-0 m-0">
+      {{ item.name | titlecase }} {{ ": " + item.price + "$" }}
+    </p>
+  </div>
+</div>
+
+<!-- {{ item.mealType == "appetizer" ? item.name + item.price : "" }} -->
